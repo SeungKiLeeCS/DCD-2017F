@@ -1,0 +1,641 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Pipeline · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="readme.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="readme.html">
+            
+                <a href="readme.html">
+            
+                    
+                    Notes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="pipeline.html">
+            
+                <a href="pipeline.html">
+            
+                    
+                    Pipeline
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Pipeline</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="pipeline">Pipeline</h1>
+<h2 id="pipelining-with-hazard">Pipelining with Hazard</h2>
+<p>Hazards are complications in pipelining that occur because instructions are executing in parellel, but the programmer assumes that the execute one at a time.</p>
+<h3 id="1-structure-hazard">1) Structure Hazard</h3>
+<p>2 instructions in the pipeline want simulataneous access to the same piece of hardware</p>
+<h4 id="example">example</h4>
+<p>In our MIPS machine, we have instruction mem -&gt; what&apos;s the problem of having single memory? : When two try to read at the same time. all of instructions needs to read from instruciton mem. But loadword has to read from data mem as well.</p>
+<pre><code>code 1
+
+ADD R1, R1, R3
+LW R5, 0(R6)
+OR R4 ...
+AND ...
+ADDi ...
+SUB ...
+</code></pre><p>this table prob on the test</p>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADDI</td>
+<td>AND</td>
+<td>OR</td>
+<td>LW</td>
+<td>ADD</td>
+</tr>
+</tbody>
+</table>
+<p>This is structure hazard is you only have one mem.</p>
+<p>Reg File could have structure hazard. We deal with this one by writing in the first half of the clk cycle and reading in the second half.</p>
+<p>We do this in this order because the instruction in WB is an earlier instruction in ID, may need the result of the earlier instruction.</p>
+<h4 id="how-you-deal-with-structure-hazard">How you deal with structure hazard</h4>
+<p>1) make 2 copies of the hardware
+2) time share a single copy within the clock cycle
+3) insert a stall/nop so that one instruction uses the hardware while the other instruction waits.</p>
+<p>-&gt; With the Stall / Assume one memory only. / each row is a cycle</p>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADD</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>LW</td>
+<td>ADD</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>OR</td>
+<td>LW</td>
+<td>ADD</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>AND</td>
+<td>OR</td>
+<td>LW</td>
+<td>ADD</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>NOP</strong></td>
+<td>AND</td>
+<td>OR</td>
+<td>LW</td>
+<td>ADD</td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td><strong>NOP</strong></td>
+<td>AND</td>
+<td>OR</td>
+<td>LW</td>
+</tr>
+<tr>
+<td>SUB</td>
+<td>ADDI</td>
+<td><strong>NOP</strong></td>
+<td>AND</td>
+<td>OR</td>
+</tr>
+</tbody>
+</table>
+<p>-&gt; this NOP, called bubbles/stalls in the book. This will result in increase in cycle, because we&apos;re skiping an instruction to avoid structure hazard</p>
+<p>structure hazards are easily avoided in design of computer</p>
+<h3 id="2-data-hazard">2) Data Hazard</h3>
+<p>occur due to the fact that instructions may be reading/writing from the same register</p>
+<p>Why avoid large variety of register when writing code? to avoid data hazard</p>
+<h4 id="example">Example</h4>
+<pre><code>code 2
+
+LW R1, 0(R2)
+ADD R3, R1, R4
+ADDI R3, R3, -4
+SW R3, 0, R2
+</code></pre><p>there&apos;s data dependency in this code, because LW R1 - ADD R1 and ADD R3 - ADDI R3, and ADDI R3 - SW R3. Basically check the diagonal registers and if they overlap then data hazard cuz we have read-write problem.</p>
+<p>Store Word here, arrow go staright down (cuz it reads)</p>
+<p>RAW (Read after Write) Hazard : True Dependency.
+-&gt; 2 other hazards type
+1) WAW (Write after Write)
+2) WAR (Write after Read)</p>
+<h4 id="example">Example</h4>
+<pre><code>code 3
+
+ADD R1, R2, R3
+ADDI R4, R1, 6
+SUB R1, R9, R10
+AND R3, R6, R7
+</code></pre><p>WAW hazard is ADD R1, SUB R1
+WAR hazard is ADD R3, AND R3</p>
+<p>We don&apos;t have problem with these cuz everything is in order in this class. -&gt; for Test, list where the dependencies are.</p>
+<h4 id="fix-of-data-hazard-using">Fix of Data Hazard using</h4>
+<p>1) STall the instruction that needs the result in the ID stage until it can be readfrom the register file.</p>
+<p>The control logic will determine whether or not the instruction should stall</p>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LW</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>LW</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td>ADD</td>
+<td>LW</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>LW</td>
+<td></td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>NOP</td>
+<td>LW</td>
+</tr>
+<tr>
+<td>SW</td>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>NOP</td>
+</tr>
+<tr>
+<td>SW</td>
+<td>ADDI</td>
+<td>NOP</td>
+<td>ADD</td>
+<td>NOP</td>
+</tr>
+<tr>
+<td>SW</td>
+<td>ADDI</td>
+<td>NOP</td>
+<td>NOP</td>
+<td>ADD</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>SW</td>
+<td>ADDI</td>
+<td>NOP</td>
+<td>NOP</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>SW</td>
+<td>NOP</td>
+<td>ADDI</td>
+<td>NOP</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>NOP</td>
+<td>SW</td>
+<td>NOP</td>
+<td>ADDI</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>LW decoded, no prob</li>
+<li>Add decoded, and now we see the R1 hazard / so stall</li>
+<li>now ADD stays in ID, and NOP fills the place to avoid data hazard</li>
+<li>LW write to reg in the first half, and read on 2nd half. no stall needed!</li>
+<li>Stall cuz ADDI need result from ADD</li>
+<li>stall again</li>
+<li>now ADDI moves</li>
+<li>But SW can&apos;t move cuz it needs the result of ADDI, so stall</li>
+<li>Now it can move </li>
+</ol>
+<p>as you can see, with all the NOP, its not the optimal solution.</p>
+<p>Question : At what point in the pipeline is the data available? -&gt; at writing to regfile. So using this, comes data forwarding.</p>
+<p>2) Data Forwarding</p>
+<p>IF the data an instruction needs is currently present in the pipeline, I can &quot;FORWARD&quot; it to the appropriate stage in the pipeline without having to go through the register file first. As a result, I can avoid a lot of my stall cycles. If not, we still need to stall</p>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LW</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>LW</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td>ADD</td>
+<td>LW</td>
+<td></td>
+<td></td>
+<td>&gt; now ADD need result of LW of R1. ADD needs the data at EX. But data need to be taken out from mem, so stall.</td>
+</tr>
+<tr>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>LW</td>
+<td></td>
+<td>&gt; now I can get the data from MEM, so ADD moves.</td>
+</tr>
+<tr>
+<td>SW</td>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>LW</td>
+<td>&gt; LW&apos;s R1 is now forwarded to ADD at EX</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>SW</td>
+<td>ADDI</td>
+<td>ADD</td>
+<td>NOP</td>
+<td>&gt; R3 goes from ADD to ADDI. But with SW, it needs the R3&apos;s result at MEM because it stores in memory.</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>NOP</td>
+<td>SW</td>
+<td>ADDI</td>
+<td>ADD</td>
+<td>&gt; SW does not need the data yet, so another way of doing this would be :</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>NOP</td>
+<td>NOP</td>
+<td>NOP</td>
+<td>SW</td>
+<td>ADDI</td>
+<td>&gt; where R3 still goes from ADDI to SW</td>
+</tr>
+</tbody>
+</table>
+<p>Reference : Book <a href="">figure 4.53</a></p>
+<h3 id="3-control-hazard">3) Control Hazard</h3>
+<p>Due to branched, and we don&apos;t know which instruction should come next until the branches are completed.</p>
+<table>
+<thead>
+<tr>
+<th>IF</th>
+<th>ID</th>
+<th>EX</th>
+<th>MEM</th>
+<th>WB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>empty</td>
+<td>Hazard Detection</td>
+<td>Forward</td>
+<td>empty</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<p>Hazard Detection determines stall cycles.
+Forward determines which data (if any) to forward</p>
+<p>The stalls always happen in ID stage</p>
+<pre><code>code 4
+
+add R1, R2, R3
+sub R4, R1, R5
+</code></pre><p>R1 is rd in add, rs in sub. R5 is rt in sub</p>
+<p><code>pseudocode bitch
+if:
+    ex/mem.regwrite &amp;&amp; 
+    ex/mem.regrd != 0 &amp;&amp;
+    ex/mem.regrd = ID/EX.regrs 
+then:
+    forward A = 10</code></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="readme.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Notes">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Pipeline","level":"1.2.1","depth":2,"previous":{"title":"Notes","level":"1.2","depth":1,"path":"notes/readme.md","ref":"notes/readme.md","articles":[{"title":"Pipeline","level":"1.2.1","depth":2,"path":"notes/pipeline.md","ref":"notes/pipeline.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"notes/pipeline.md","mtime":"2017-10-20T00:22:00.330Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-20T00:22:15.529Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
