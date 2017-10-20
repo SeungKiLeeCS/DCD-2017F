@@ -134,17 +134,24 @@ IF the data an instruction needs is currently present in the pipeline, I can "FO
 | ---- | ---- | ---- | ---- | ---- |
 | LW   |      |      |      |      |
 | ADD  | LW   |      |      |      |
-|ADDI|ADD|LW||| > now ADD need result of LW of R1. ADD needs the data at EX. But data need to be taken out from mem, so stall.
-|ADDI|ADD|NOP|LW|| > now I can get the data from MEM, so ADD moves.
-|SW|ADDI|ADD|NOP|LW| > LW's R1 is now forwarded to ADD at EX
-|NOP|SW|ADDI|ADD|NOP| > R3 goes from ADD to ADDI. But with SW, it needs the R3's result at MEM because it stores in memory.
-|NOP|NOP|SW|ADDI|ADD| > SW does not need the data yet, so another way of doing this would be :
+| ADDI | ADD  | LW   |      |      |
+| ADDI | ADD  | NOP  | LW   |      |
+| SW   | ADDI | ADD  | NOP  | LW   |
+| NOP  | SW   | ADDI | ADD  | NOP  |
+| NOP  | NOP  | SW   | ADDI | ADD  |
+
+1. add is at ID, now ADD need result of LW of R1. ADD needs the data at EX. But data need to be taken out from mem, so stall.
+2. now I can get the data from MEM, so ADD moves.
+3. LW's R1 is now forwarded to ADD at EX
+4. R3 goes from ADD to ADDI. But with SW, it needs the R3's result at MEM because it stores in memory.
+5. SW does not need the data yet, so another way of doing this would be :
 
 | IF   | ID   | EX   | MEM  | WB   |
 | ---- | ---- | ---- | ---- | ---- |
 | ...  | ...  | ...  | ...  | ...  |
 | ...  | ...  | ...  | ...  | ...  |
-|NOP|NOP|NOP|SW|ADDI| > where R3 still goes from ADDI to SW
+| NOP  | NOP  | NOP  | SW   | ADDI |
+-> where R3 still goes from ADDI to SW
 
 Reference : Book [figure 4.53]()
 

@@ -450,7 +450,6 @@ WAR hazard is ADD R3, AND R3</p>
 <td>LW</td>
 <td></td>
 <td></td>
-<td>&gt; now ADD need result of LW of R1. ADD needs the data at EX. But data need to be taken out from mem, so stall.</td>
 </tr>
 <tr>
 <td>ADDI</td>
@@ -458,7 +457,6 @@ WAR hazard is ADD R3, AND R3</p>
 <td>NOP</td>
 <td>LW</td>
 <td></td>
-<td>&gt; now I can get the data from MEM, so ADD moves.</td>
 </tr>
 <tr>
 <td>SW</td>
@@ -466,7 +464,6 @@ WAR hazard is ADD R3, AND R3</p>
 <td>ADD</td>
 <td>NOP</td>
 <td>LW</td>
-<td>&gt; LW&apos;s R1 is now forwarded to ADD at EX</td>
 </tr>
 <tr>
 <td>NOP</td>
@@ -474,7 +471,6 @@ WAR hazard is ADD R3, AND R3</p>
 <td>ADDI</td>
 <td>ADD</td>
 <td>NOP</td>
-<td>&gt; R3 goes from ADD to ADDI. But with SW, it needs the R3&apos;s result at MEM because it stores in memory.</td>
 </tr>
 <tr>
 <td>NOP</td>
@@ -482,10 +478,16 @@ WAR hazard is ADD R3, AND R3</p>
 <td>SW</td>
 <td>ADDI</td>
 <td>ADD</td>
-<td>&gt; SW does not need the data yet, so another way of doing this would be :</td>
 </tr>
 </tbody>
 </table>
+<ol>
+<li>add is at ID, now ADD need result of LW of R1. ADD needs the data at EX. But data need to be taken out from mem, so stall.</li>
+<li>now I can get the data from MEM, so ADD moves.</li>
+<li>LW&apos;s R1 is now forwarded to ADD at EX</li>
+<li>R3 goes from ADD to ADDI. But with SW, it needs the R3&apos;s result at MEM because it stores in memory.</li>
+<li>SW does not need the data yet, so another way of doing this would be :</li>
+</ol>
 <table>
 <thead>
 <tr>
@@ -517,10 +519,10 @@ WAR hazard is ADD R3, AND R3</p>
 <td>NOP</td>
 <td>SW</td>
 <td>ADDI</td>
-<td>&gt; where R3 still goes from ADDI to SW</td>
 </tr>
 </tbody>
 </table>
+<p>-&gt; where R3 still goes from ADDI to SW</p>
 <p>Reference : Book <a href="">figure 4.53</a></p>
 <h3 id="3-control-hazard">3) Control Hazard</h3>
 <p>Due to branched, and we don&apos;t know which instruction should come next until the branches are completed.</p>
@@ -598,7 +600,7 @@ then:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Pipeline","level":"1.2.1","depth":2,"previous":{"title":"Notes","level":"1.2","depth":1,"path":"notes/readme.md","ref":"notes/readme.md","articles":[{"title":"Pipeline","level":"1.2.1","depth":2,"path":"notes/pipeline.md","ref":"notes/pipeline.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"notes/pipeline.md","mtime":"2017-10-20T00:22:00.330Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-20T00:22:15.529Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Pipeline","level":"1.2.1","depth":2,"previous":{"title":"Notes","level":"1.2","depth":1,"path":"notes/readme.md","ref":"notes/readme.md","articles":[{"title":"Pipeline","level":"1.2.1","depth":2,"path":"notes/pipeline.md","ref":"notes/pipeline.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"notes/pipeline.md","mtime":"2017-10-20T00:55:19.395Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2017-10-20T00:55:34.711Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
