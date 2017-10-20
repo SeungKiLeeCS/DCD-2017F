@@ -15,7 +15,7 @@ since all of the pages are in md format, you can edit them using markdown syntax
 
 1. Create new pages
   clone the repo.
-  open SUMMARY.md, and add pages using []() format, where [] contains the name you want to give the page, and () containing relative path of the md file to the top level folder.
+  open SUMMARY.md, and add pages using \[\]\(\) format, where [] contains the name you want to give the page, and () containing relative path of the md file to the top level folder.
   save the SUMMARY.md
   on the top level folder, run gitbook init. you will see the new files and folders created.
 
