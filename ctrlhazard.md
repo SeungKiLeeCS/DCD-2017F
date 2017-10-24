@@ -9,11 +9,11 @@
 | ADDI2 | ADDI1 | SUB   | ADD   | STALL |
 | -     | ADDI2 | ADDI1 | SUB   | ADD   |
 
-No need to stall for LW2
-For ADD, we have to stall cuz hazard <>
-For SUB, no hazard so no stall
-with AddI1, we don't need to stall at all
-With ADDI2, you don't have to stall if we forward R4 from SUB
+No need to stall for LW2  
+For ADD, we have to stall cuz hazard at R4  
+For SUB, no hazard so no stall  
+with AddI1, we don't need to stall at all  
+With ADDI2, you don't have to stall if we forward R4 from SUB  
 
 ```
 code 1
