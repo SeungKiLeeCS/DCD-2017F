@@ -27,16 +27,16 @@ ADDI R4, R4, 4
 ```
 @ clkcycle SUB ADD STALL LW2 LW1
 
-RegDst = 0
-RegWrite = 1
-ALUsrc
-MEMWrite = 0
-MemRead =1 (LW)
-MemtoReg = 1 (LW)
-ALU OP = 0 (STALL, do nothing)
-PC src = 0 ()
-ForwardA = 00 (no forwarding to stall)
-ForwardB = 00
+RegDst = 0  
+RegWrite = 1  
+ALUsrc = no use  
+MEMWrite = 0  
+MemRead =1 (LW)  
+MemtoReg = 1 (LW)  
+ALU OP = 0 (STALL, do nothing)  
+PC src = 0 ()  
+ForwardA = 00 (no forwarding to stall)  
+ForwardB = 00  
 
 ## control hazards
 Prob with Branches
