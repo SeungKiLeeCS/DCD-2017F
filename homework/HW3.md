@@ -90,4 +90,4 @@ Multi cycle organization has same clk cycle time as pipelined organization.
 
 Multi Cycle ExTime = (5 * 20%) + (4 * (45%+20%+15%)) = (1)+(3.2) = **4.2**
 
-Single Cycle ExTime = $no \ pipeline \ cycle \over pipeline \ cycle \ time$ = $1250 \over 350$ = **3.5**
+Single Cycle ExTime = $$no \ pipeline \ cycle \over pipeline \ cycle \ time$$ = $$1250 \over 350$$ = **3.5**
